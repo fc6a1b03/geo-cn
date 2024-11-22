@@ -42,5 +42,4 @@ jobs:
           context: docker
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}:latest
-            ${{ env.REGISTRY }}/${{ github.repository }}:$(date +'%Y%m%d%H%M%S')
           platforms: linux/amd64,linux/arm64
