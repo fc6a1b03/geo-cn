@@ -1,9 +1,10 @@
 name: GeoCN Docker Image CI
 
-# 触发配置
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 2 15 * *'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +28,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build 和 push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
