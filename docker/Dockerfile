@@ -9,9 +9,9 @@ FROM python:3.9-slim
 ENV TZ=Asia/Shanghai
 WORKDIR /code
 Expose 80
+COPY main.py *.mmdb .
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
-COPY ./main.py .
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     apt-get update && \
