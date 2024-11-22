@@ -9,7 +9,7 @@ FROM python:3-slim
 ENV TZ=Asia/Shanghai
 WORKDIR /code
 COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/lib/python3/site-packages /usr/local/lib/python3/site-packages
 COPY ./main.py .
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     apt-get update && apt-get install -y curl procps && rm -rf /var/lib/apt/lists/* && \
