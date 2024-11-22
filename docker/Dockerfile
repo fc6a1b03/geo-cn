@@ -1,25 +1,17 @@
-FROM python:3.9 as py-builder
+FROM python:3 as builder
 WORKDIR /code
-
 COPY ./requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.9-slim
+===========================================
+
+FROM python:3-slim
 ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-RUN apt-get update && apt-get install -y curl procps && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /code
-
-COPY --from=py-builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
-COPY --from=py-builder /usr/local/bin /usr/local/bin
-
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY ./main.py .
-COPY ./update_and_restart.sh .
-
-RUN chmod -R 777 /code
-
-RUN chmod +x /code/update_and_restart.sh
-
-CMD ["sh", "/code/update_and_restart.sh"]
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    apt-get update && apt-get install -y curl procps && rm -rf /var/lib/apt/lists/* && \
+    chmod +x *
+CMD sh update_and_restart.sh
