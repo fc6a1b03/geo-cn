@@ -38,7 +38,7 @@ jobs:
         env:
           LICENSE_KEY: ${{ secrets.MAXMIND_LICENSE_KEY }}
 
-      - name: Build 和 push Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           push: true
