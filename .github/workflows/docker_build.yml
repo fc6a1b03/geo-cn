@@ -31,7 +31,7 @@ jobs:
       - name: Sync Geoip2
         working-directory: docker
         run: |
-          chmod +x geoip2_sync.sh && ./geoip2_sync.sh
+          chmod +x geoip2_sync.sh && LICENSE_KEY="${LICENSE_KEY}" ./geoip2_sync.sh
         env:
           LICENSE_KEY: ${{ secrets.MAXMIND_LICENSE_KEY }}
 
