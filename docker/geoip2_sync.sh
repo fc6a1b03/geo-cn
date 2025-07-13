@@ -13,8 +13,9 @@ for cmd in curl; do
 done
 # GitHub源配置
 declare -A database_urls=(
-  [GeoCN]="https://github.com/ljxi/GeoCN/releases/download/Latest/GeoCN.mmdb"
-  # wp-statistics社区维护
+  # Hackl0us维护版本
+  [GeoCN]="https://github.com/Hackl0us/GeoIP2-CN/raw/release/Country.mmdb"
+  # wp-statistics维护版本
   [GeoLite2-City]="https://github.com/wp-statistics/GeoLite2-City/raw/main/GeoLite2-City.mmdb"
   [GeoLite2-ASN]="https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-ASN.mmdb"
   [GeoLite2-Country]="https://github.com/wp-statistics/GeoLite2-Country/raw/main/GeoLite2-Country.mmdb"
