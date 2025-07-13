@@ -13,8 +13,8 @@ for cmd in curl; do
 done
 # GitHub源配置
 declare -A database_urls=(
-  # Hackl0us 维护版本
-  [GeoCN]="https://github.com/Hackl0us/GeoIP2-CN/raw/release/Country.mmdb"
+  # ljxi 维护版本
+  [GeoCN]="https://github.com/ljxi/GeoCN/releases/download/Latest/GeoCN.mmdb"
   # P3TERX 与 Loyalsoldier 维护版本
   [GeoLite2-ASN]="https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-without-asn.mmdb"
   [GeoLite2-City]="https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb"
