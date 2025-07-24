@@ -29,11 +29,6 @@ jobs:
         working-directory: docker
         run: |
           chmod +x geoip2_sync.sh && ./geoip2_sync.sh
-
-      - name: Generate timestamp
-        id: timestamp
-        run: |
-          echo "CURRENT_TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -42,5 +37,4 @@ jobs:
           context: docker
           标签: |
             ${{ env.REGISTRY }}/${{ github.repository }}:latest
-            ${{ env.REGISTRY }}/${{ github.repository }}:${{ steps.timestamp.outputs.CURRENT_TIMESTAMP }}
           platforms: linux/amd64,linux/arm64
