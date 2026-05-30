@@ -176,33 +176,52 @@ def query():
     while True:
         try:
             ip = input('IP：   \t').strip()
+            if not ip:
+                continue
             info = get_ip_info(ip)
-                
-            print(f"网段：\t{info['addr']}")
-                
-            if "as" in info:
-                print(f"ISP：\t",end=' ')
-                if "info" in info["as"]:
-                    print(info["as"]["info"],end=' ')
+
+            # 网段总是存在
+            print(f"网段：\t{info.get('addr', 'N/A')}")
+
+            # 处理 AS 信息，防止缺少 number/name
+            if "as" in info and isinstance(info["as"], dict):
+                as_data = info["as"]
+                has_asn = "number" in as_data and "name" in as_data
+                print("ISP：\t", end='')
+                # 自定义 ISP 名称（如中国移动）
+                if "info" in as_data and as_data["info"]:
+                    print(as_data["info"], end=' ')
+                elif "name" in as_data:
+                    print(as_data["name"], end=' ')
                 else:
-                    print(info["as"]["name"],end=' ')
-                if "type" in info:
-                    print(f"({info['type']})",end=' ')
-                print(f"ASN{info['as']['number']}",end=' ')
-                print(info['as']["name"])
-                
+                    print("未知", end=' ')
+                # 类型（如 骨干网/城域网）
+                if "type" in info and info["type"]:
+                    print(f"({info['type']})", end=' ')
+                # ASN 编号和名称
+                if has_asn:
+                    print(f"ASN{as_data['number']}", end=' ')
+                    print(as_data["name"])
+                else:
+                    print()  # 换行
+            else:
+                # 没有 AS 信息，但可能有 ISP（来自国内库）
+                if "as" in info and "info" in info["as"]:
+                    print(f"ISP：\t{info['as']['info']}")
+                else:
+                    print("ISP：\t未知")
+
+            # 注册地和使用地
             if "registered_country" in info and ("country" not in info or info["country"]["code"] != info["registered_country"]["code"]):
-                print(f"注册地：\t{info['registered_country']['name']}")
-                
+                print(f"注册地：\t{info['registered_country'].get('name', '未知')}")
             if "country" in info:
-                print(f"使用地：\t{info['country']['name']}")
-                
-            if "regions" in info:
+                print(f"使用地：\t{info['country'].get('name', '未知')}")
+            if "regions" in info and info["regions"]:
                 print(f"位置：    \t{' '.join(info['regions'])}")
-                
+
         except Exception as e:
-            print(e)
-            raise e
+            print(f"查询出错：{e}")
+            # 不 raise，让循环继续
         finally:
             print("\n")
             
