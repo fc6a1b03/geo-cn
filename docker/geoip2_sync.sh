@@ -1,20 +1,18 @@
 #!/bin/bash
 # =============================================
 # GeoIP数据库下载脚本
-# 最后更新：2025-07-13
+# 最后更新：2026-3-14
 # =============================================
 set -euo pipefail
 # 检查依赖
-for cmd in curl; do
-  if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "错误：未找到 $cmd，请先安装。"
-    exit 1
-  fi
-done
+if ! command -v curl >/dev/null 2>&1; then
+  echo "错误：未找到 curl，请先安装。"
+  exit 1
+fi
 # GitHub源配置
 declare -A database_urls=(
   # ljxi 维护版本
-  [GeoCN]="https://github.com/ljxi/GeoCN/releases/download/Latest/GeoCN.mmdb"
+  [GeoCN]="https://github.com/ljxi/GeoCN/releases/latest/download/GeoCN.mmdb"
   # P3TERX 维护版本
   [GeoLite2-ASN]="https://git.io/GeoLite2-ASN.mmdb"
   [GeoLite2-City]="https://git.io/GeoLite2-City.mmdb"
@@ -32,6 +30,7 @@ download_database() {
           --retry 3 \
           --silent \
           --show-error \
+          --http2 --compressed \
           "$database_url"; then
     mv "$tmp_file" "$output_file"
     # 获取文件大小
