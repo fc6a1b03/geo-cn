@@ -79,6 +79,8 @@ def get_country(d):
     return r
 
 def province_match(s):
+    if not s:
+       return ''
     arr=['内蒙古','黑龙江','河北','山西','吉林','辽宁','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','海南','四川','贵州','云南','陕西','甘肃','青海','广西','西藏','宁夏','新疆','北京','天津','上海','重庆']
     for i in arr:
         if i in s:
@@ -133,20 +135,35 @@ def get_maxmind(ip: str):
     
     return ret
 
-def get_cn(ip:str, info={}):
+def get_cn(ip: str, info=None):
+    if info is None:
+        info = {}
     ret, prefix = cn_reader.get_with_prefix_len(ip)
     if not ret:
         return
     info["addr"] = get_addr(ip, prefix)
-    regions = de_duplicate([ret["province"],ret["city"],ret["districts"]])
+
+    # 安全获取可能缺失的字段
+    province = ret.get("province", "")
+    city = ret.get("city", "")
+    districts = ret.get("districts", "")
+    isp = ret.get("isp", "")
+    net = ret.get("net", "")
+
+    regions = de_duplicate([province, city, districts])
     if regions:
         info["regions"] = regions
-        info["regions_short"] = de_duplicate([province_match(ret["province"]),ret["city"].replace('市',''),ret["districts"]])
+        # 短名称处理：province_match 应能处理空字符串
+        short_province = province_match(province) if province else ""
+        short_city = city.replace('市', '') if city else ""
+        info["regions_short"] = de_duplicate([short_province, short_city, districts])
+
     if "as" not in info:
         info["as"] = {}
-    info["as"]["info"] = ret['isp']
-    if ret['net']:
-        info["type"] = ret['net']
+    if isp:
+        info["as"]["info"] = isp
+    if net:
+        info["type"] = net
     return ret
 
 def get_ip_info(ip):
